@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -10,6 +11,9 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Turning torque in Newtons.")]
     [SerializeField] float turningTorque = 10;
     private Rigidbody rb; // Rigidbody reference.
+
+    [SerializeField] TextMeshProUGUI speedText;
+    [SerializeField] TextMeshProUGUI depthText;
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +26,17 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Speed: " + rb.velocity.magnitude * 1.944f + " knots");
+        RaycastHit hit;
+        if (Physics.Raycast(rb.position, Vector3.down, out hit, 300f))
+        {
+            depthText.text = "Depth: " + Mathf.RoundToInt(hit.distance) + " meters";
+        }
+        else
+        {
+            depthText.text = "Depth: 300+ meters";
+        }
+
+        speedText.text = Mathf.RoundToInt(rb.velocity.magnitude * 1.944f) + " knots";
     }
 
     private void FixedUpdate()
